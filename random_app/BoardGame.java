@@ -1,0 +1,212 @@
+package random_app;
+import java.util.*;
+
+public class BoardGame {
+    public   Random random = new Random();
+    public   Map<String, String> judgeCards = new HashMap<>();
+    public   Set<Integer> bonusCards = new HashSet<>();
+    public   Set<Integer> minusCards = new HashSet<>();
+    public   Set<Integer> judgeCardPositions = new HashSet<>();
+    public int player1Position = 0, player2Position = 0;
+    public int player1Score = 0, player2Score = 0;
+
+    public BoardGame() {
+        initializeJudgeCards();
+        initializeSpecialCards();
+    }
+    ////set of some questions for the judge cards
+    public void initializeJudgeCards() {
+        judgeCards.put("watermelon", "What is the red-colored fruit that consists of 10 letters?");
+        judgeCards.put("0", "What is 1 ÷ infinite ?");
+        judgeCards.put("water", "What do cows drink?");
+        judgeCards.put("bamboo", "What do pandas eat?");
+        judgeCards.put("diamond", "What is the hardest natural substance on Earth?");
+        judgeCards.put("xvi", "What is the Roman numeral for 16?");
+        judgeCards.put("hydrogen", "Which element has atomic number 1?");
+        judgeCards.put("venus", "Which planet is known as the morning star?");
+        judgeCards.put("eight", "How many legs does a spider have?");
+        judgeCards.put("pacific", "What is the largest ocean on Earth?");
+        judgeCards.put("cheetah", "What is the fastest land animal?");
+        judgeCards.put("mitochondria", "What is the powerhouse of the cell?");
+        judgeCards.put("gallium", "Which metal melts at human body temperature?");
+        judgeCards.put("fibonacci", "Which mathematical sequence starts with 0 and 1, with each term being the sum of the previous two?");
+    }
+    ////separate the special cards randomly in the board  every game in specific numbers
+    public void initializeSpecialCards() {
+        Set<Integer> allPositions = new HashSet<>();
+        while (bonusCards.size() < 5) {
+            ////skip cell 1 and 56
+            int pos = random.nextInt(56 - 2) + 2;
+            if (!allPositions.contains(pos)) {
+                bonusCards.add(pos);
+                allPositions.add(pos);
+            }
+        }
+
+        while (minusCards.size() < 5) {
+            int pos = random.nextInt(56 - 2) + 2;
+            if (!allPositions.contains(pos)) {
+                minusCards.add(pos);
+                allPositions.add(pos);
+            }
+        }
+
+        while (judgeCardPositions.size() < 7) {
+            int pos = random.nextInt(56 - 2) + 2;
+            if (!allPositions.contains(pos)) {
+                judgeCardPositions.add(pos);
+                allPositions.add(pos);
+            }
+        }
+    }
+    ////get random dice number
+    public int rollDice() {
+        return random.nextInt(6) + 1;
+    }
+
+    public void askJudgeQuestion(int playerNum) {
+        //// Get a random key (answer) from the judgeCards map and it's question
+        Object[] keys = judgeCards.keySet().toArray();
+        String correctAnswer = (String) keys[random.nextInt(keys.length)];
+        String question = judgeCards.get(correctAnswer);
+
+        System.out.print("🃏 Judge Card! " + question + " :");
+        Scanner scanner = new Scanner(System.in);
+        String playerAnswer = scanner.nextLine().trim().toLowerCase();
+
+        if (playerAnswer.equals(correctAnswer)) {
+            System.out.println("✅ Correct! +2 points.");
+            updateScore(playerNum, 2);
+        } else {
+            System.out.println("❌ Wrong! -1 point.");
+            updateScore(playerNum, -1);
+        }
+    }
+
+    public void updateScore(int playerNum, int points) {
+        if (playerNum == 1) player1Score += points;
+        else player2Score += points;
+    }
+    ////
+    public void movePlayer(int playerNum, int roll) {
+        if (playerNum == 1) {
+            player1Position = Math.min(player1Position + roll, 56);
+            checkSpecialCards(1);
+            //// If landed on a Minus Card, move back and check again
+            if (minusCards.contains(player1Position)) {
+                System.out.println("🛑 Minus Card! -1 point & move back 3 spaces.");
+                updateScore(1, -1);
+                player1Position = Math.max(1, player1Position - 3);
+                checkSpecialCards(1);
+            }
+        }
+        else {
+            player2Position = Math.min(player2Position + roll, 56);
+            checkSpecialCards(2);
+
+            if (minusCards.contains(player2Position)) {
+                System.out.println("🛑 Minus Card! -1 point & move back 3 spaces.");
+                updateScore(2, -1);
+                player2Position = Math.max(1, player2Position - 3);
+                checkSpecialCards(2);
+            }
+        }
+    }
+
+    public void checkSpecialCards(int playerNum) {
+        int position = (playerNum == 1) ? player1Position : player2Position;
+
+        if (bonusCards.contains(position)) {
+            System.out.println("🍀 Bonus Card! +3 points.");
+            updateScore(playerNum, 3);
+        }
+        if (minusCards.contains(position)) {
+            System.out.println("🛑 Minus Card! -1 point & move back 3 spaces.");
+            updateScore(playerNum, -1);
+            if (playerNum == 1) player1Position = Math.max(1, player1Position - 3);
+            else player2Position = Math.max(1, player2Position - 3);
+        }
+        if (judgeCardPositions.contains(position)) {
+            askJudgeQuestion(playerNum);
+        }
+    }
+
+    public void determineWinner() {
+        System.out.println("\n🎉 Game Over! Final Scores:");
+        System.out.println(" (🔴) Score: " + player1Score);
+        System.out.println(" (🔵) Score: " + player2Score);
+
+        if (player1Score > player2Score) System.out.println("🏆 " + "(🔴)" + " wins!");
+        else if (player2Score > player1Score) System.out.println("🏆 " + "(🔵)" + " wins!");
+        else System.out.println("🤝 It's a draw!");
+    }
+
+    public void printBoard() {
+        System.out.println("\n📌 Board Positions:");
+
+        for (int i = 1; i <= 56; i++) {
+            String cell;
+            ////both in the same cell
+            if (i == player2Position && i == player1Position)
+                cell = "🟣";
+            else if (i == player1Position)
+                cell = "🔴";
+            else if (i == player2Position)
+                cell = "🔵";
+            else if (judgeCardPositions.contains(i))
+                cell = "🃏";
+            else if (bonusCards.contains(i))
+                cell = "🍀";
+            else if (minusCards.contains(i))
+                cell = "🛑";
+            else
+                cell = String.format(Locale.US, "%2d ", i);
+
+            System.out.print(cell);
+            if (i % 8 == 0) System.out.println();
+        }
+        System.out.println();
+    }
+
+    public void playing() {
+       Scanner scanner = new Scanner(System.in);
+       player1Position = 0;
+       player2Position = 0;
+       player1Score = 0;
+       player2Score = 0;
+
+        System.out.println("\nWelcome to the board Game ... best of luck! (✿◠‿◠)");
+        System.out.println("this game is played on a 56-cell board with 5 bonus cards and 5 minus cards. and 7 judge cards.\n");
+        System.out.println("1- minus cards gives you -1 point and move back 3 spaces\n2-bonus cards gives you 3 points");
+        System.out.println("3- judge cards gives you +2 points for correct answers or -1 point for wrong");
+        printBoard();
+
+        while (player1Position < 56 && player2Position < 56) {
+            System.out.print("\n🎲  (🔴) turn . ENTER anything to roll: ");
+            scanner.nextLine();
+            int roll = rollDice();
+            System.out.println("(🔴) rolled a " + roll + "!");
+            movePlayer(1, roll);
+            printBoard();
+            //// Check if game ends
+            if (player1Position >= 56) break;
+
+            System.out.print("\n🎲 (🔵) turn . ENTER anything to roll: ");
+            scanner.nextLine();
+            roll = rollDice();
+            System.out.println("(🔵)  rolled a " + roll + "!");
+            movePlayer(2, roll);
+            printBoard();
+        }
+        determineWinner();
+
+        System.out.print("do you want to play again? (y/n) : ");
+        String userInput = scanner.nextLine();
+        if(userInput.equalsIgnoreCase("y")) {playing();}
+        else if(userInput.equalsIgnoreCase("n")){
+            System.out.println("\nThanks for playing! Goodbye! (✿◕‿◕)");
+        }else
+            System.out.println("\nwrong input please retry : )");
+    }
+}
+
