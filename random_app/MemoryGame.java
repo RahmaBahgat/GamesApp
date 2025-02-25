@@ -81,8 +81,11 @@ public class MemoryGame {
                 if (isPlayerTurn) playerScore += 3;
                 else friendScore += 3;
             }
-            else if (isPlayerTurn) playerScore += 3;
-            else randomScore += 3;
+            else if (playAgainstRandom){
+                if (isPlayerTurn) playerScore += 3;
+                else randomScore += 3;
+            }
+            else playerScore += 3;
 
             if(cards.get(card1 - 1).equals(bonusEmoji))  matchedSet.add(card1);
             else  matchedSet.add(card2);
@@ -95,24 +98,22 @@ public class MemoryGame {
             if (playWithFriend) {
                 if (isPlayerTurn) playerScore += 1;
                 else friendScore += 1;
-            }
-            else if (isPlayerTurn) playerScore += 1;
-            else randomScore += 1;
+            } else if (playAgainstRandom) {
+                if (isPlayerTurn) playerScore += 1;
+                else randomScore += 1;
+            } else playerScore += 1;
         }
         else {
             System.out.println("Not a match. -1 point");
             if (playWithFriend) {
-                if (isPlayerTurn) playerScore -= 1;
-                else friendScore -= 1;
+                if (isPlayerTurn) playerScore -=1;
+                else friendScore -=1;
             }
-            else {
-                if (isPlayerTurn) {
-                    playerScore -= 1;
-                    wrong++;
-                } else {
-                    randomScore -= 1;
-                }
+            else if (playAgainstRandom){
+                if (isPlayerTurn) playerScore -=1;
+                else randomScore -=1;
             }
+            else playerScore -=1; wrong++;
         }
 
         if (playWithFriend) {
