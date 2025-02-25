@@ -1,28 +1,28 @@
 package random_app;
 import static random_app.MemoryGame.input;
-import static random_app.MemoryGame.response;
 
 public class main {
     public static void main() {
-        while (!response.equalsIgnoreCase("N")) {
+        String in = "Y";
+        while (!in.equalsIgnoreCase("N")) {
             do {
                 System.out.print("\nWelcome to playful app!(. ❛ ᴗ ❛.)\nWould you like to play a game (Y/N)? ");
-                response = input.next().trim().toUpperCase();
-            } while (!response.equals("Y") && !response.equals("N"));
+                in = input.next().trim().toUpperCase();
+            } while (!in.equals("Y") && !in.equals("N"));
 
-            if (response.equalsIgnoreCase("Y")) {
+            if (in.equalsIgnoreCase("Y")) {
                 System.out.print("1-Connect 4\n2-Memory game\n3-board game\nEnter your choice (1/2/3): ");
-                response = input.next().trim().toUpperCase();
+                in = input.next().trim().toUpperCase();
 
-                if (response.equalsIgnoreCase("1")) {
+                if (in.equalsIgnoreCase("1")) {
                     Connect4 game = new Connect4();
                     game.playing();
                 }
-                else if (response.equalsIgnoreCase("2")) {
+                else if (in.equalsIgnoreCase("2")) {
                     MemoryGame game = new MemoryGame();
                     game.playing();
                 }
-                else if (response.equalsIgnoreCase("3")) {
+                else if (in.equalsIgnoreCase("3")) {
                     BoardGame game = new BoardGame();
                     game.playing();
                 }
@@ -30,7 +30,7 @@ public class main {
                     System.out.println("Invalid choice. Try again :)");
                 }
             }
-            else if (!response.equalsIgnoreCase("Y") && !response.equalsIgnoreCase("N")) {
+            else if (!in.equalsIgnoreCase("Y") && !in.equalsIgnoreCase("N")) {
                 System.out.println("Invalid choice. Try again :)");
             }
         }
