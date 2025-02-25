@@ -1,10 +1,10 @@
 package random_app;
 import java.util.*;
 import static random_app.MemoryGame.input;
-import static random_app.MemoryGame.response;
 
 class Connect4 {
-    public String[][] board;
+    public String[][] board = new String[6][7];
+
     //// Set the board with all empty cells
     private void initializeBoard() {
         for (int i = 0; i < 6; i++) {
@@ -156,6 +156,7 @@ class Connect4 {
     }
     //// Playing the game
     public void playing() {
+        String response = "Y";
         while (!response.equals("N")) {
             initializeBoard();
 
