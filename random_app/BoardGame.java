@@ -1,7 +1,6 @@
 package random_app;
 import java.util.*;
 import static random_app.MemoryGame.input;
-import static random_app.MemoryGame.response;
 
 public class BoardGame {
     public   Random random = new Random();
@@ -71,7 +70,7 @@ public class BoardGame {
         String question = judgeCards.get(correctAnswer);
 
         System.out.print("🃏 Judge Card! " + question + " :");
-        String playerAnswer = input.nextLine().trim().toLowerCase();
+        String playerAnswer = input.next().trim().toLowerCase();
 
         if (playerAnswer.equals(correctAnswer)) {
             System.out.println("✅ Correct! +2 points.");
@@ -180,6 +179,7 @@ public class BoardGame {
     }
 
     public void playing() {
+        String response = "Y";
         while (!response.equals("N")) {
             initializeJudgeCards();
             initializeSpecialCards();
@@ -196,7 +196,7 @@ public class BoardGame {
 
             while (player1Position < 56 && player2Position < 56) {
                 System.out.print("\n🎲  (🔴) turn . ENTER anything to roll: ");
-                input.nextLine();
+                input.next();
                 int roll = rollDice();
                 System.out.println("(🔴) rolled a " + roll + "!");
                 movePlayer(1, roll);
@@ -206,7 +206,7 @@ public class BoardGame {
                 if (player1Position >= 56) break;
 
                 System.out.print("\n🎲 (🔵) turn . ENTER anything to roll: ");
-                input.nextLine();
+                input.next();
                 roll = rollDice();
                 System.out.println("(🔵)  rolled a " + roll + "!");
                 movePlayer(2, roll);
