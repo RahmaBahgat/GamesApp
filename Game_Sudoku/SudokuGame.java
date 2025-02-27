@@ -1,7 +1,5 @@
 package Game_Sudoku;
 
-import java.io.File;
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
