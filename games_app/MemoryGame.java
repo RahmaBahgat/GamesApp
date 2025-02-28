@@ -221,7 +221,7 @@ public class MemoryGame {
                 System.out.println("You lost ಥ_ಥ");
             }
             else if (playerScore > randomScore) {
-                new Thread(() -> playSound("/goodresult-82807.wav")).start();
+                new Thread(() -> playSound("goodresult-82807.wav")).start();
                 System.out.println("You win ☜(⌒▽⌒)☞");
             }
             else {
