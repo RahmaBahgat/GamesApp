@@ -172,11 +172,11 @@ public class BoardGame {
 
     public void determineWinner() {
         if (player1Score > player2Score) {
-            new Thread(() -> playSound("/goodresult-82807.wav")).start();
+            new Thread(() -> playSound("goodresult-82807.wav")).start();
             System.out.println("🏆 " + "(🔴)" + " wins!");
         }
         else if (player2Score > player1Score) {
-            new Thread(() -> playSound("/goodresult-82807.wav")).start();
+            new Thread(() -> playSound("goodresult-82807.wav")).start();
             System.out.println("🏆 " + "(🔵)" + " wins!");
         }
         else {
